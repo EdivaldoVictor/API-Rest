@@ -1,13 +1,13 @@
 const express = require("express");
+const routes = require('./routes/tea') // import the routes
+
 const app = express();
-const PORT = 3000;
+
 
 app.use(express.json()); // parses incoming requests with JSON payloads
 
-app.get("/", (req, res) => {
-    res.json({message: "Hello world!"});
-});
+app.use('/', routes)
 
-app.listen(PORT, () =>
- console.log('Example app listening on port 3000'),
- );
+const listener = app.listen(process.env.PORT || 3000, () => {
+    console.log('Your app is listening on port ' + listener.address().port)
+})
