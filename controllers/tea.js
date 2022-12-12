@@ -60,9 +60,32 @@ const getOneTea = (req, res, next) => {
     });
 };
 
-//POST '/tea/:name'
-const newComment = (req, res, next) => {
-    res.json({ message: "POST 1 tea comment" });
+//POST 1 tea comment'
+const newComment = (req, res) => {
+    let name = req.params.name; // get the tea to add the comment in
+    let newComment = req.body.comment; // get the new comment
+    //create a comment object to push
+    const comment = {
+        text: newComment,
+        date: new Date()
+    }
+    //find the tea object
+    Tea.findOne({ name: name }, (err, data) => {
+        if (err || !data || !newComment) {
+            return res.json({ message: "Tea doesn't exist" });    
+        }
+        else {
+            //add comment to comments array of the tea object
+            data.comments.push(comment);
+            //save changes to db
+            data.save(err => {
+                if (err) {
+                    return res.json({message:"Comment failed to add", error:err })
+                }
+                return res.json(data)
+            })
+        }
+    })
 };
 
 //DELETE '/tea/:name'
