@@ -1,7 +1,4 @@
 const express = require('express');
-const multer = require('multer');
-const upload = multer();
-
 
 // 1. Create an express router object to set up our routes
 const router = express.Router();
@@ -10,7 +7,7 @@ const router = express.Router();
 const teaController = require('../controllers/tea');
 
 // 3. Create our first route with the controller function as the callback to handle the request.
-router.post('/tea',upload.none(), teaController.newTea);
+router.post('/tea',teaController.uploadImg , teaController.newTea);
 router.get('/tea', teaController.getAllTea);
 router.delete('/tea', teaController.deleteAllTea);
 

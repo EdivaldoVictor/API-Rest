@@ -1,4 +1,18 @@
 const Tea = require('../models/Tea')
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './uploads');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+
+const uploadImg = multer({ storage: storage }).single('image');
+
+
 //Get '/tea'
 const getAllTea = (req, res, next) => {
     Tea.find({}, (err, data) => {
@@ -17,7 +31,7 @@ const newTea = (req, res) => {
         if (!data) {
             const newTea = new Tea({
                 name: req.body.name,
-                image: req.body.image, // placeholder for now
+                image: req.file.path,
                 description: req.body.description,
                 origin: req.body.origin,
                 brew_time: req.body.brew_time,
@@ -90,10 +104,20 @@ const newComment = (req, res) => {
 
 //DELETE '/tea/:name'
 const deleteOneTea = (req, res, next) => {
-    res.json({ message: "DELETE 1 tea" });
+    let name = req.params.name; // get the tea name of tea to delete
+
+    Tea.deleteOne({ name: name }, (err, data) => {
+    //if theres nothing to delete return a message
+        if (data.deletedCount == 0) return res.json({ message: "Tea doesn't exist" });
+        //else if there's an error, return the err message
+        else if (err) return res.json(`Something went wrong, please try again. ${err}`)
+        //else return the success mesage
+        else return res.json({ message: "Tea deleted" });
+    })
 };
 module.exports = {
     getAllTea,
+    uploadImg,
     newTea,
     deleteAllTea,
     getOneTea,
