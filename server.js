@@ -30,6 +30,6 @@ app.use(express.json()); // parses incoming requests with JSON payloads
 
 app.use('/', routes)
 
-const listener = app.listen(process.env.PORT || 3000, () => {
+const listener = app.listen(process.env.PORT || 3333, () => {
     console.log('Your app is listening on port ' + listener.address().port)
 })
