@@ -21,7 +21,8 @@ mongoose.connect(
     (err) => {
         if (err) return console.log("Error:", err);
         console.log("MongoDB Connection -- Ready state is:", mongoose.connection.readyState);
-    }
+    },
+    
 );
 
 
@@ -29,6 +30,10 @@ mongoose.connect(
 app.use(express.json()); // parses incoming requests with JSON payloads
 
 app.use('/', routes)
+
+.get(function (req, res) {
+    res.sendFile(process.cwd() + '/index.html');
+});
 
 const listener = app.listen(process.env.PORT || 3333, () => {
     console.log('Your app is listening on port ' + listener.address().port)
